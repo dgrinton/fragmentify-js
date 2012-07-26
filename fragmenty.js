@@ -5,99 +5,87 @@ window.Fragmenty = function(){
                 alert('how do i shot xpath?');
                 return;
             }
-            if($('html').attr('base')) {
-                process_base();
-            }
-            process_requires(document);
+            var doc = process(window.location.pathname);
+            replace_special(doc,'head');
+            replace_special(doc,'body');
+            $('[xmlns]').removeAttr('xmlns');
         },
     };
-    var process_base = function(){
-        var actions = $('body > *');
-        var base = $('html').attr('base');
+    var get_file = function(path, callback) {
         $.ajax({
-            'url':base,
+            'url':path,
             'error':function(){
-                alert('could not load ' + base);
+                alert('could not load ' + path);
             },
             'success':function(data){
-                data = data.replace('<!doctype html>','');
                 try{
-                    var replacement = $.parseXML(data);
+                    data = data.replace('<!doctype html>','');
+                    var doc = $.parseXML(data);
                 }
                 catch(e){
-                    alert('xml error in '+base);
+                    alert('xml error in '+path);
                     return;
                 }
-                replace_special(replacement, 'head');
-                replace_special(replacement, 'body');
-                //process requires in the base doc
-                process_requires(document);
-                $('[require]').each(process_require);
-                actions.each(function(k,v){
-                    process_action(v);
-                });
+                callback(doc);
             },
             'async':false,
         });
-        //and then process requires in the final doc
-        $('html').removeAttr('base');
+    };
+    var process = function(path) {
+        console.log('processing',path);
+        var ret = null;
+        get_file(path,function(doc){
+            if($(doc).find('html').attr('base')) {
+                doc = process_base(doc, dirname(path));
+            }
+            process_requires(doc, dirname(path));
+            ret = doc;
+        });
+        console.log(xml_to_string(ret));
+        return ret;
+    }
+    var process_base = function(doc, parent_path){
+        var actions = $(doc).find('html > *');
+        var base_fn = parent_path+$(doc).find('html').attr('base');
+        var base_doc = process(base_fn);
+        actions.each(function(k,v){
+            if(v.nodeName == 'head') {
+                return;
+            }
+            process_action(base_doc,v);
+        });
+        $(doc).find('html').removeAttr('base');
+        return base_doc;
     };
     var process_requires = function(root, path) {
-        if(!path) {
-            path = '';
-        }
-        if(!root.find) {
-            root = $(root);
-        }
-        root.find('[require]').each(function(k,v){
+        $(root).find('[require]').each(function(k,v){
             process_require(v, path);
         });
     };
     var process_require = function(req, parent_path) {
         req = $(req);
         var required = parent_path+req.attr('require');
+        path = dirname(required);
         var query = req.attr('xpath');
-        var parts = required.split('/');
-        parts.pop();
-        if(parts.length) {
-            parts.push('');
-        }
-        path = parts.join('/');
         if(!query) {
             query = '//fragment/node()';
         }
-        $.ajax({
-            'url':required,
-            'error':function(){
-                alert('could not load ' + required);
-            },
-            'success':function(data){
-                var fragment = $(data).get(0);
-                process_requires(fragment, path);
-                fragment = $.parseXML('<fragment>'+$(fragment).html()+'</fragment>');
-                if(fragment instanceof Document) {
-                    var to_import = fragment.evaluate(query, fragment, null,
-                        XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-                }
-                else {
-                    var to_import = document.evaluate(query, fragment, null,
-                        XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
-                }
-                var src;
-                while(src = to_import.iterateNext()) {
-                    if(src instanceof Text) {
-                        req.before(src.textContent);
-                    }
-                    else {
-                        var xml = xml_to_string(src);
-                        var instance = $(xml);
-                        req.before(instance);
-                    }
-                }
-                req.remove();
-            },
-            'async':false,
-        });
+        var fragment = process(required)
+        console.log('importing ',query,'from',xml_to_string(fragment));
+        var to_import = fragment.evaluate(query, fragment, null,
+            XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        var src;
+        while(src = to_import.iterateNext()) {
+            if(src instanceof Text) {
+                req.before(src.textContent);
+            }
+            else {
+                var xml = xml_to_string(src);
+                var instance = $(xml);
+                req.before(instance);
+            }
+        }
+        req.remove();
     };
     var replace_special = function(xml_doc, s) {
         xml_doc = $(xml_doc);
@@ -116,7 +104,7 @@ window.Fragmenty = function(){
             return (new XMLSerializer()).serializeToString(node);
         } 
     };
-    var process_action = function(src) {
+    var process_action = function(base_doc, src) {
         src = $(src);
         var actions = [
             ['replace',function(dst, instance){
@@ -166,7 +154,7 @@ window.Fragmenty = function(){
         $.each(actions,function(k,pair){
             var xp;
             if(xp = src.attr(pair[0])) {
-                var targets = get_targets(xp);
+                var targets = get_targets(base_doc, xp);
                 $.each(targets,function(k,dst){
                     var instance = src.clone();
                     instance.removeAttr(pair[0]);
@@ -175,11 +163,8 @@ window.Fragmenty = function(){
             }
         });
     };
-    var manipulate = function(node, callback) {
-        
-    };
-    var get_targets = function(xp) {
-        var rs = document.evaluate(xp, document, null,
+    var get_targets = function(base_doc, xp) {
+        var rs = base_doc.evaluate(xp, base_doc, null,
             XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
         var t;
         var ret = []
@@ -187,6 +172,14 @@ window.Fragmenty = function(){
             ret.push(t);
         }
         return ret;
+    };
+    var dirname = function(path) {
+        var parts = path.split('/');
+        parts.pop();
+        if(parts.length) {
+            parts.push('');
+        }
+        return parts.join('/');
     };
     return _pub;
 }();
