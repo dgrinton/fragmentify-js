@@ -1,4 +1,6 @@
+jQuery.noConflict();
 window.Fragmenty = function(){
+    var $ = jQuery;
     var _pub = {
         'init':function(){
             if(!document.evaluate) {
@@ -184,4 +186,4 @@ window.Fragmenty = function(){
     };
     return _pub;
 }();
-$(document).ready(Fragmenty.init);
+jQuery(document).ready(Fragmenty.init);
