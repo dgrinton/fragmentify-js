@@ -9,6 +9,7 @@ window.Fragmenty = function(){
             replace_special(doc,'head');
             replace_special(doc,'body');
             $('[xmlns]').removeAttr('xmlns');
+            $('html').removeAttr('base');
         },
     };
     var get_file = function(path, callback) {
