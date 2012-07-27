@@ -87,64 +87,27 @@ window.Fragmenty = function(){
         req.remove();
     };
     var replace_document = function(xml_doc) {
-        var html = $('html').get(0);
-        var head = $('head').get(0);
-        var body = $('body').get(0);
-        var where = 'pre-head';
-        var to_insert = [];
-        $.each(xml_doc.documentElement.childNodes, function(i,node){
-            to_insert.push(node);
-        });
-        var replace_node = function(s) {
-            var to_replace = $(s);
-            to_replace.html('');
-            var old_atts = [];
-            $.each(to_replace.get(0).attributes, function(i, att){
-                old_atts.push(att.name);
-            });
-            $.each(old_atts,function(i,att) {
-                to_replace.removeAttr(att);
-            });
-            $.each($(xml_doc).find(s).get(0).attributes, function(i, att){
-                to_replace.attr(att.name, att.value);
-            });
-            $(xml_doc).find(s+' > *').each(function(k,v){
-                var node = $(xml_to_string(v));
-                to_replace.append(node);
-            });
-        };
-        $.each(to_insert, function(i,node){
-            if(node.tagName == 'head') {
-                replace_node('head');
-                where = 'pre-body';
-            }
-            else if(node.tagName == 'body') {
-                replace_node('body');
-                where = 'post-body';
-            }
-            else {
-                if(where == 'pre-head') {
-                    html.insertBefore(node, head);
-                }
-                else if(where == 'pre-body') {
-                    html.insertBefore(node, body);
-                }
-                else if(node instanceof Text){
-                    html.appendChild(node);
-                }
-                else {
-                    $(html).append($(xml_to_string(node)));
-                }
-            }
-        });
+        document.open();
+        document.write(xml_to_string(xml_doc.documentElement));
+        document.close();
     };
     var xml_to_string = function(node) {
         if (window.ActiveXObject) {     
-            return node.xml;   
+            var ret = node.xml;   
         } 
         else {     
-            return (new XMLSerializer()).serializeToString(node);
+            var ret = (new XMLSerializer()).serializeToString(node);
         } 
+        var canselfclose = 'area,base,br,col,command,embed,hr,img,input,keygen,link,meta,param,source,track,wbr'.split(',');
+        ret = ret.replace(/<([a-z0-9]+)([^>]*)\/>/g, function(all, tag, rest) {
+            if($.inArray(tag, canselfclose) == -1) {
+                return '<'+tag+rest+'></'+tag+'>';
+            }
+            else {
+                return all;
+            }
+        });
+        return ret;
     };
     var process_action = function(base_doc, src) {
         src = $(src);
