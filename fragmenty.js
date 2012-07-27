@@ -35,7 +35,7 @@ window.Fragmenty = function(){
         });
     };
     var process = function(path) {
-        console.log('processing',path);
+        //console.log('processing',path);
         var ret = null;
         get_file(path,function(doc){
             if($(doc).find('html').attr('base')) {
@@ -44,7 +44,7 @@ window.Fragmenty = function(){
             process_requires(doc, dirname(path));
             ret = doc;
         });
-        console.log(xml_to_string(ret));
+        //console.log(xml_to_string(ret));
         return ret;
     }
     var process_base = function(doc, parent_path){
@@ -74,7 +74,7 @@ window.Fragmenty = function(){
             query = '//fragment/node()';
         }
         var fragment = process(required)
-        console.log('importing ',query,'from',xml_to_string(fragment));
+        //console.log('importing ',query,'from',xml_to_string(fragment));
         var to_import = fragment.evaluate(query, fragment, null,
             XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
         var src;
@@ -101,11 +101,17 @@ window.Fragmenty = function(){
     };
     var xml_to_string = function(node) {
         if (window.ActiveXObject) {     
-            return node.xml;   
+            var ret = node.xml;   
         } 
         else {     
-            return (new XMLSerializer()).serializeToString(node);
+            var ret = (new XMLSerializer()).serializeToString(node);
         } 
+        var canselfclose =
+        'area,base,br,col,command,embed,hr,img,input,keygen,link,meta,param,source,track,wbr'.split(',');
+        ret.replace(/<([a-z0-9]+)([^>]*)\/>/g, function(m, c, o, s) {
+            return '<'+m[1]+m[2]+'></'+m[1]+'>';
+        });
+        return ret;
     };
     var process_action = function(base_doc, src) {
         src = $(src);
