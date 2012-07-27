@@ -8,8 +8,7 @@ window.Fragmenty = function(){
                 return;
             }
             var doc = process(window.location.pathname);
-            replace_special(doc,'head');
-            replace_special(doc,'body');
+            replace_document(doc);
             $('[xmlns]').removeAttr('xmlns');
             $('html').removeAttr('base');
         },
@@ -35,7 +34,6 @@ window.Fragmenty = function(){
         });
     };
     var process = function(path) {
-        //console.log('processing',path);
         var ret = null;
         get_file(path,function(doc){
             if($(doc).find('html').attr('base')) {
@@ -44,7 +42,6 @@ window.Fragmenty = function(){
             process_requires(doc, dirname(path));
             ret = doc;
         });
-        //console.log(xml_to_string(ret));
         return ret;
     }
     var process_base = function(doc, parent_path){
@@ -74,7 +71,6 @@ window.Fragmenty = function(){
             query = '//fragment/node()';
         }
         var fragment = process(required)
-        //console.log('importing ',query,'from',xml_to_string(fragment));
         var to_import = fragment.evaluate(query, fragment, null,
             XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
         var src;
@@ -90,28 +86,65 @@ window.Fragmenty = function(){
         }
         req.remove();
     };
-    var replace_special = function(xml_doc, s) {
-        xml_doc = $(xml_doc);
-        var to_replace = $(s);
-        to_replace.html('');
-        xml_doc.find(s+' > *').each(function(k,v){
-            var node = $(xml_to_string(v));
-            to_replace.append(node);
+    var replace_document = function(xml_doc) {
+        var html = $('html').get(0);
+        var head = $('head').get(0);
+        var body = $('body').get(0);
+        var where = 'pre-head';
+        var to_insert = [];
+        $.each(xml_doc.documentElement.childNodes, function(i,node){
+            to_insert.push(node);
+        });
+        var replace_node = function(s) {
+            var to_replace = $(s);
+            to_replace.html('');
+            var old_atts = [];
+            $.each(to_replace.get(0).attributes, function(i, att){
+                old_atts.push(att.name);
+            });
+            $.each(old_atts,function(i,att) {
+                to_replace.removeAttr(att);
+            });
+            $.each($(xml_doc).find(s).get(0).attributes, function(i, att){
+                to_replace.attr(att.name, att.value);
+            });
+            $(xml_doc).find(s+' > *').each(function(k,v){
+                var node = $(xml_to_string(v));
+                to_replace.append(node);
+            });
+        };
+        $.each(to_insert, function(i,node){
+            if(node.tagName == 'head') {
+                replace_node('head');
+                where = 'pre-body';
+            }
+            else if(node.tagName == 'body') {
+                replace_node('body');
+                where = 'post-body';
+            }
+            else {
+                if(where == 'pre-head') {
+                    html.insertBefore(node, head);
+                }
+                else if(where == 'pre-body') {
+                    html.insertBefore(node, body);
+                }
+                else if(node instanceof Text){
+                    html.appendChild(node);
+                }
+                else {
+                    $(html).append($(xml_to_string(node)));
+                }
+            }
         });
     };
     var xml_to_string = function(node) {
         if (window.ActiveXObject) {     
-            var ret = node.xml;   
+            return node.xml;   
         } 
         else {     
-            var ret = (new XMLSerializer()).serializeToString(node);
+            return (new XMLSerializer()).serializeToString(node);
         } 
-        var canselfclose =
-        'area,base,br,col,command,embed,hr,img,input,keygen,link,meta,param,source,track,wbr'.split(',');
-        ret.replace(/<([a-z0-9]+)([^>]*)\/>/g, function(m, c, o, s) {
-            return '<'+m[1]+m[2]+'></'+m[1]+'>';
-        });
-        return ret;
     };
     var process_action = function(base_doc, src) {
         src = $(src);

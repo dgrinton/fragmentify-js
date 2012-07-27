@@ -13,5 +13,15 @@
         <p>this is my page</p>
         <p id="override-me">override this</p>
         <p require="../fragments/frag2.html"></p>
+        <script type="text/javascript" src="../jquery-1.7.2.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                console.log('document ready');
+            });
+        </script>
+        <textarea id="in-base"></textarea>
     </body>
+    <script type="text/javascript">
+        console.log('outside body and head');
+    </script>
 </html>
