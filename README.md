@@ -116,11 +116,11 @@ The details:
 
 Fragmenty works by adding attributes to regular HTML elements. The "require"
 attribute can be used anywhere. The "base" attribute can only be used on a html
-node. The rest of the attributes must be used on children of a html node with
-the "base" attribute. These last attributes should all contain xpath selectors
-which specify which nodes in the base document to modify. They can match
-multiple elements, and a subsequent can modify something produced by a prior
-modifier.
+node. The rest of the attributes (we'll call them actions) must be used on
+children of a html node with the "base" attribute. These last attributes should
+all contain xpath selectors which specify which nodes in the base document to
+modify. An action can match multiple elements, and a subsequent action can
+modify something produced by a prior action.
 
 #require:
 
