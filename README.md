@@ -114,13 +114,13 @@ And blog.html:
 The details:
 ------------
 
-Fragmenty works by adding attributes to regular HTML elements. The "require"
-attribute can be used anywhere. The "base" attribute can only be used on a html
-node. The rest of the attributes (we'll call them actions) must be used on
-children of a html node with the "base" attribute. These last attributes should
-all contain xpath selectors which specify which nodes in the base document to
-modify. An action can match multiple elements, and a subsequent action can
-modify something produced by a prior action.
+Fragmenty's syntax consists of attributes added to regular HTML elements. The
+"require" attribute can be used anywhere. The "base" attribute can only be used
+on a html node. The rest of the attributes (we'll call them actions) must be
+used on children of a html node with the "base" attribute. These last attributes
+should all contain xpath selectors which specify which nodes in the base
+document to modify. An action can match multiple elements, and a subsequent
+action can modify something produced by a prior action.
 
 ###require:
 
@@ -178,6 +178,20 @@ replacing anything that was already there.
 ###remove:
 
 Remove the matched nodes.
+
+Compatibility:
+--------------
+
+Fragmenty.js has been tested in:
+
+* Chrome 20.0.1132.57
+* Safari 6.0 (7536.25)
+* Firefox 14.0.1
+
+See also:
+---------
+
+* Fragmenty.js' PHP predecessor: https://github.com/iaindooley/Fragmentify
 
 Known issues:
 -------------
