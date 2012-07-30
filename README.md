@@ -183,7 +183,7 @@ Known issues:
 -------------
 
 * The template must be requested off a web server via http, otherwise the
-    JavaScript requests for resources (other html files) will fail. This can be
-    worked around in Chrome (and possibly other browsers) with the
+    JavaScript requests for resources (fragment and base documents) will fail.
+    This can be worked around in Chrome (and possibly other browsers) with the
     --allow-file-access-from-files flag. Ultimately I intend to write browser
     extensions to work around this.
