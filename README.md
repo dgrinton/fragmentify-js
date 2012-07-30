@@ -122,7 +122,7 @@ all contain xpath selectors which specify which nodes in the base document to
 modify. An action can match multiple elements, and a subsequent action can
 modify something produced by a prior action.
 
-#require:
+###require:
 
 In any document you can use the require="path/to/file.html" attribute. The
 path must be relative to the file doing the requiring. The file being required
@@ -134,7 +134,7 @@ fragment node.
 
 The type of the node with the require attribute is arbitrary.
 
-#base:
+###base:
 
 This is used to provide inheritance. The specified path must be relative to the
 current file, and should contain a complete HTML document (or should inherit
@@ -142,40 +142,40 @@ from another complete HTML document). The base document will be loaded, each of
 the child nodes of the current HTML document will be processed, modifying the
 base document, and then the base document will replace the current document.
 
-#replace:
+###replace:
 
 Replace each of the matched nodes with the current node. Can optionally use
 the "keep-contents" attribute, which will append the contents of the replaced
 node to the replacing node.
 
-#append:
+###append:
 
 Append the current node to each of the matched nodes.
 
-#prepend:
+###prepend:
 
 Prepend the current node to each of the matched nodes.
 
-#before:
+###before:
 
 Insert the current node before each of the matched nodes.
 
-#after:
+###after:
 
 Insert the current node after each of the matched nodes.
 
-#surround:
+###surround:
 
 Wrap the matched nodes with the current node. Takes an optional attribute "where"
 which specifies where the wrapped node should be placed inside the wrapping
 node, defaults to "bottom".
 
-#merge:
+###merge:
 
 Write each of the attributes on the current node onto the matched nodes,
 replacing anything that was already there.
 
-#remove:
+###remove:
 
 Remove the matched nodes.
 
