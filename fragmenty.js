@@ -1,8 +1,14 @@
 jQuery.noConflict();
+if(!window.Fragmenty) {
 window.Fragmenty = function(){
     var $ = jQuery;
+    var ran = false;
     var _pub = {
         'init':function(){
+            if(ran) {
+                return;
+            }
+            ran = true;
             if(!document.evaluate) {
                 alert('how do i shot xpath?');
                 return;
@@ -187,5 +193,5 @@ window.Fragmenty = function(){
         return parts.join('/');
     };
     return _pub;
-}();
+}();}
 jQuery(document).ready(Fragmenty.init);
