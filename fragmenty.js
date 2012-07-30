@@ -17,6 +17,7 @@ window.Fragmenty = function(){
             replace_document(doc);
             $('[xmlns]').removeAttr('xmlns');
             $('html').removeAttr('base');
+            $('script[src$="fragmenty.min.js"]').remove();
         },
     };
     var get_file = function(path, callback) {
@@ -27,8 +28,13 @@ window.Fragmenty = function(){
             },
             'success':function(data){
                 try{
-                    data = data.replace('<!doctype html>','');
+                    var doctype = null;
+                    data = data.replace(/<!doctype [^>]+>/,function(dt){
+                        doctype = dt;
+                        return '';
+                    });
                     var doc = $.parseXML(data);
+                    doc.fragmenty_doctype = doctype;
                 }
                 catch(e){
                     alert('xml error in '+path);
@@ -94,6 +100,9 @@ window.Fragmenty = function(){
     };
     var replace_document = function(xml_doc) {
         document.open();
+        if(xml_doc.fragmenty_doctype) {
+            document.write(xml_doc.fragmenty_doctype);
+        }
         document.write(xml_to_string(xml_doc.documentElement));
         document.close();
     };
