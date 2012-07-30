@@ -168,7 +168,7 @@ Insert the current node after each of the matched nodes.
 
 Wrap the matched nodes with the current node. Takes an optional attribute "where"
 which specifies where the wrapped node should be placed inside the wrapping
-node, defaults to "bottom".
+node, only supports "top" or "bottom", defaults to "bottom".
 
 ###merge:
 
