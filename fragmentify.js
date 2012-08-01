@@ -6,7 +6,7 @@ window.Fragmentify = function(){
     var _pub = {
         'init':function(path){
             if(!path || typeof(path) == 'function') {
-                if($('[base],[require]').length == 0) {
+                if($('html[base],[require]').length == 0) {
                     return;
                 }
                 path = window.location.pathname;
