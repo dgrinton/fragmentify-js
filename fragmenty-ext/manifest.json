@@ -1,0 +1,10 @@
+{
+  "name": "Fragmenty",
+  "version": "1.0",
+  "description": "Fragmenty",
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["jquery-1.7.2.min.js", "fragmenty.js"]
+  }],
+  "manifest_version": 2
+}
