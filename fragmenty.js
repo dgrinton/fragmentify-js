@@ -4,7 +4,13 @@ window.Fragmenty = function(){
     var $ = jQuery;
     var ran = false;
     var _pub = {
-        'init':function(){
+        'init':function(path){
+            if(!path || typeof(path) == 'function') {
+                if($('[base],[require]').length == 0) {
+                    return;
+                }
+                path = window.location.pathname;
+            }
             if(ran) {
                 return;
             }
@@ -13,36 +19,39 @@ window.Fragmenty = function(){
                 alert('how do i shot xpath?');
                 return;
             }
-            var doc = process(window.location.pathname);
+            var doc = process(path);
             replace_document(doc);
             $('[xmlns]').removeAttr('xmlns');
             $('html').removeAttr('base');
             $('script[src$="fragmenty.min.js"]').remove();
         },
     };
-    var get_file = function(path, callback) {
+    var get_file = function(path, doc_cb) {
+        path = cleanpath(path);
+        var file_cb = function(data){
+            try{
+                var doctype = null;
+                data = data.replace(/<!doctype [^>]+>/,function(dt){
+                    doctype = dt;
+                    return '';
+                });
+                var doc = $.parseXML(data);
+                doc.fragmenty_doctype = doctype;
+            }
+            catch(e){
+                alert('xml error in '+path);
+                return;
+            }
+            doc_cb(doc);
+        };
         $.ajax({
             'url':path,
             'error':function(){
                 alert('could not load ' + path);
             },
-            'success':function(data){
-                try{
-                    var doctype = null;
-                    data = data.replace(/<!doctype [^>]+>/,function(dt){
-                        doctype = dt;
-                        return '';
-                    });
-                    var doc = $.parseXML(data);
-                    doc.fragmenty_doctype = doctype;
-                }
-                catch(e){
-                    alert('xml error in '+path);
-                    return;
-                }
-                callback(doc);
-            },
+            'success':file_cb,
             'async':false,
+            'dataType':'text',
         });
     };
     var process = function(path) {
@@ -55,7 +64,7 @@ window.Fragmenty = function(){
             ret = doc;
         });
         return ret;
-    }
+    };
     var process_base = function(doc, parent_path){
         var actions = $(doc).find('html > *');
         var base_fn = parent_path+$(doc).find('html').attr('base');
@@ -64,17 +73,18 @@ window.Fragmenty = function(){
             if(v.nodeName == 'head') {
                 return;
             }
-            process_action(base_doc,v);
+            process_action(base_doc,v,parent_path);
         });
         $(doc).find('html').removeAttr('base');
         return base_doc;
     };
     var process_requires = function(root, path) {
-        $(root).find('[require]').each(function(k,v){
+        $(root).find('*').andSelf().filter('[require]').each(function(k,v){
             process_require(v, path);
         });
     };
     var process_require = function(req, parent_path) {
+        var original = req;
         req = $(req);
         var required = parent_path+req.attr('require');
         path = dirname(required);
@@ -96,6 +106,7 @@ window.Fragmenty = function(){
                 req.before(instance);
             }
         }
+        var owner = req.get(0).ownerDocument;
         req.remove();
     };
     var replace_document = function(xml_doc) {
@@ -124,7 +135,7 @@ window.Fragmenty = function(){
         });
         return ret;
     };
-    var process_action = function(base_doc, src) {
+    var process_action = function(base_doc, src, parent_path) {
         src = $(src);
         var actions = [
             ['replace',function(dst, instance){
@@ -134,20 +145,25 @@ window.Fragmenty = function(){
                     while(dst.firstChild) {
                         instance.get(0).appendChild(dst.firstChild);
                     }
+                    process_requires(instance, parent_path);
                 }
                 $(dst).remove();
             }],
             ['append',function(dst, instance){
                 $(dst).append(instance);
+                process_requires(instance.get(0), parent_path);
             }],
             ['prepend',function(dst, instance){
                 $(dst).prepend(instance);
+                process_requires(instance.get(0), parent_path);
             }],
             ['before',function(dst, instance){
                 $(dst).before(instance);
+                process_requires(instance.get(0), parent_path);
             }],
             ['after',function(dst, instance){
                 $(dst).after(instance);
+                process_requires(instance.get(0), parent_path);
             }],
             ['surround',function(dst, instance){
                 var where = instance.attr('where');
@@ -161,6 +177,7 @@ window.Fragmenty = function(){
                         instance.append(dst);
                         break;
                 }
+                process_requires(instance.get(0), parent_path);
             }],
             ['merge',function(dst, instance) {
                 $.each(instance.get(0).attributes, function(i, att) {
@@ -201,6 +218,12 @@ window.Fragmenty = function(){
         }
         return parts.join('/');
     };
+    var cleanpath = function(path) {
+        path = path.replace(/^\/([A-Z]):\/(.*)/, function(all, drive, rest) {
+            return 'file:///'+drive+':/'+rest;
+        });
+        return path;
+    };
     return _pub;
 }();}
-jQuery(document).ready(Fragmenty.init);
+jQuery(window).ready(Fragmenty.init);
