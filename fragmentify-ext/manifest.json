@@ -1,10 +1,10 @@
 {
-  "name": "Fragmenty",
+  "name": "Fragmentify",
   "version": "1.0",
-  "description": "Fragmenty",
+  "description": "Fragmentify",
   "content_scripts": [{
     "matches": ["<all_urls>"],
-    "js": ["jquery-1.7.2.min.js", "fragmenty.js"]
+    "js": ["jquery-1.7.2.min.js", "fragmentify.js"]
   }],
   "manifest_version": 2
 }

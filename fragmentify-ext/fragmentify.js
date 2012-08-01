@@ -1,6 +1,6 @@
 jQuery.noConflict();
-if(!window.Fragmenty) {
-window.Fragmenty = function(){
+if(!window.Fragmentify) {
+window.Fragmentify = function(){
     var $ = jQuery;
     var ran = false;
     var _pub = {
@@ -23,7 +23,7 @@ window.Fragmenty = function(){
             replace_document(doc);
             $('[xmlns]').removeAttr('xmlns');
             $('html').removeAttr('base');
-            $('script[src$="fragmenty.min.js"]').remove();
+            $('script[src$="fragmentify.min.js"]').remove();
         },
     };
     var get_file = function(path, doc_cb) {
@@ -36,7 +36,7 @@ window.Fragmenty = function(){
                     return '';
                 });
                 var doc = $.parseXML(data);
-                doc.fragmenty_doctype = doctype;
+                doc.fragmentify_doctype = doctype;
             }
             catch(e){
                 alert('xml error in '+path);
@@ -111,8 +111,8 @@ window.Fragmenty = function(){
     };
     var replace_document = function(xml_doc) {
         document.open();
-        if(xml_doc.fragmenty_doctype) {
-            document.write(xml_doc.fragmenty_doctype);
+        if(xml_doc.fragmentify_doctype) {
+            document.write(xml_doc.fragmentify_doctype);
         }
         document.write(xml_to_string(xml_doc.documentElement));
         document.close();
@@ -226,4 +226,4 @@ window.Fragmenty = function(){
     };
     return _pub;
 }();}
-jQuery(window).ready(Fragmenty.init);
+jQuery(window).ready(Fragmentify.init);

@@ -1,10 +1,10 @@
-Fragmenty.js
+Fragmentify-js
 ============
 
 About:
 ------
 
-Fragmenty.js is a pure JavaScript HTML inheritance utility. All you need is a
+Fragmentify-js is a pure JavaScript HTML inheritance utility. All you need is a
 webserver that can serve static files.
 
 In a nutshell:
@@ -42,7 +42,7 @@ In abstract/base.html:
 In home.html:
 
     <html base="abstract/base.html">
-        <script type="text/javascript" src="fragmenty.min.js"></script>
+        <script type="text/javascript" src="fragmentify.min.js"></script>
         <div id="content" replace="//[@id='content']">
             This div will replace the #content div in base.html.
             <div require="fragments/widget.html"></div>
@@ -52,7 +52,7 @@ In home.html:
 In blog.html:
 
     <html base="abstract/base.html">
-        <script type="text/javascript" src="fragmenty.min.js"></script>
+        <script type="text/javascript" src="fragmentify.min.js"></script>
         <div id="content" replace="//[@id='content']">
             This is a blog entry!
             <div class="extra-markup">
@@ -114,7 +114,7 @@ And blog.html:
 The details:
 ------------
 
-Fragmenty's syntax consists of attributes added to regular HTML elements. The
+Fragmentify's syntax consists of attributes added to regular HTML elements. The
 "require" attribute can be used anywhere. The "base" attribute can only be used
 on a html node. The rest of the attributes (we'll call them actions) must be
 used on children of a html node with the "base" attribute. These last attributes
@@ -182,7 +182,7 @@ Remove the matched nodes.
 Compatibility:
 --------------
 
-Fragmenty.js has been tested in:
+Fragmentify-js has been tested in:
 
 * Chrome 20.0.1132.57
 * Safari 6.0 (7536.25)
@@ -191,7 +191,7 @@ Fragmenty.js has been tested in:
 See also:
 ---------
 
-* Fragmenty.js' PHP predecessor: https://github.com/iaindooley/Fragmentify
+* Fragmentify-js' PHP predecessor: https://github.com/iaindooley/Fragmentify
 
 Known issues:
 -------------
