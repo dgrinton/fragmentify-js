@@ -1,6 +1,6 @@
 #!/bin/sh
 
-yui=~/work/DecalDemo/yuicompressor-2.4.7.jar
+yui=~/work/yuicompressor-2.4.7.jar
 if [ ! -e "$yui" ]
 then
     echo don\'t know where yuicompressor is! > /dev/stderr
