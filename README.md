@@ -202,11 +202,30 @@ Remove the matched nodes.
 Compatibility:
 --------------
 
-Fragmentify-js has been tested in:
+The pure-JavaScript version of Fragmentify-js has been tested in:
 
 * Chrome 20.0.1132.57
 * Safari 6.0 (7536.25)
 * Firefox 14.0.1
+
+Cross Browser Testing:
+----------------------
+
+You're probably going to want to test the pages you create in browsers other
+than Chrome. To this end I've forked the SingleFile extension to allow it to
+work on file:// URLs - get it from [github here] (https://github.com/dgrinton/SingleFile). 
+SingleFile bundles an entire web page (images, css and all) into a single file
+for you to save to disk and open from another browser.
+
+SingleFile uses the [data URI scheme] (http://en.wikipedia.org/wiki/Data_URI_scheme) 
+to embed resources into the page. According to the SingleFile readme, this is
+supported by: Chrome, Firefox, Opera, Safari, Konqueror and Internet Explorer 8
+(limited support: data URIs must be smaller than 32 KB, embedded frames are not
+supported).
+
+To test in a browser that doesn't support the data URI scheme (or if SingleFile
+is causing other issues with your page) you can try the "Save Page As" option
+from Chrome's File menu.
 
 See also:
 ---------
