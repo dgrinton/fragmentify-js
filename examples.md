@@ -11,7 +11,7 @@
 - [Surround](#surround)
 - [Merge](#merge)
 - [Require](#require)
-- [Nested Inheritance](#nest-inherit)
+- [Nested Inheritance](#nested-inheritance)
 
 ###Inheritance
 [top](#top)
