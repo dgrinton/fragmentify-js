@@ -1,4 +1,4 @@
-#<a id="top"></a>Fragmentify Usage
+#Fragmentify Usage
 
 ##Contents
 
@@ -13,7 +13,7 @@
 - [Require](#require)
 - [Nested Inheritance](#nest-inherit)
 
-##<a id="inheritance"></a>Inheritance
+###Inheritance
 [top](#top)
 
 Let's say we have a common header, footer, some scripts and css that will be on
@@ -57,7 +57,7 @@ Now if we look at `home.html` in our browser we will see the contents of
 `abstract/base.html`. This isn't very exciting, so now we'll add some actions to
 `home.html` to modify `abstract/base.html`.
 
-###<a id="replace"></a>Replace
+###Replace
 [top](#top)
 
 Let's say we want to replace the `#content` node with some real content. In
@@ -96,7 +96,7 @@ Now if we load `home.html` in our browser we will see this:
         </body>
     </html>
 
-###<a id="append"></a>Append
+###Append
 [top](#top)
 
 Now let's say we want to add some CSS that only appears on `home.html`. We add a
@@ -134,7 +134,7 @@ Now in the browser `home.html` will look like this:
         </body>
     </html>
 
-###<a id="prepend"></a>Prepend
+###Prepend
 [top](#top)
 
 Now we want to add a `strong` node inside the `#header` node, before the `h1`.
@@ -173,7 +173,7 @@ Now in the browser `home.html` will look like this:
         </body>
     </html>
 
-###<a id="before"></a>Before
+###Before
 [top](#top)
 
 Now we'll add an "About" link into the footer between "Legal" and "Contact". We
@@ -214,7 +214,7 @@ In the browser we now see:
         </body>
     </html>
 
-###<a id="after"></a>After
+###After
 [top](#top)
 
 Now we want to add a logout link in a `p` to the header, after the `h1`. We add
@@ -259,7 +259,7 @@ In the browser, `home.html` now looks like this:
         </body>
     </html>
 
-###<a id="surround"></a>Surround
+###Surround
 [top](#top)
 
 Now we want to wrap an extra `div` around `#footer`. We add a `div` node to the
@@ -306,7 +306,7 @@ Viewed in the browser, `home.html` will look like this:
         </body>
     </html>
 
-###<a id="merge"></a>Merge
+###Merge
 [top](#top)
 
 Now we want to add a class to the `body` node. We add a `body` node as a child
@@ -355,7 +355,7 @@ And now in the browser:
         </body>
     </html>
 
-###<a id="require"></a>Require
+###Require
 [top](#top)
 
 Let's say we have a certain bit of content, some sort of widget that we want to
@@ -420,7 +420,7 @@ When loaded in the browser, `home.html` will now look like this:
 The `require` attribute can be used anywhere - inside a base document, inside a
 document that extends a base document, or inside another required document.
 
-###<a id="nest-inherit"></a>Nested Inheritance
+###Nested Inheritance
 [top](#top)
 
 Now let's say we've got another subset of pages that should use `home.html` as a
