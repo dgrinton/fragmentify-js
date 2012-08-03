@@ -21,9 +21,11 @@ window.Fragmentify = function(){
             }
             var doc = process(path);
             replace_document(doc);
-            $('[xmlns]').removeAttr('xmlns');
-            $('html').removeAttr('base');
-            $('script[src$="fragmentify.min.js"]').remove();
+            setTimeout(function(){
+                $('[xmlns]').removeAttr('xmlns');
+                $('html').removeAttr('base');
+                $('script[src$="fragmentify.min.js"]').remove();
+            },0);
         },
     };
     var get_file = function(path, doc_cb) {
