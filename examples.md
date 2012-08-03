@@ -10,6 +10,7 @@
 - [After](#after)
 - [Surround](#surround)
 - [Merge](#merge)
+- [Remove](#remove)
 - [Require](#require)
 - [Nested Inheritance](#nested-inheritance)
 
@@ -355,6 +356,55 @@ And now in the browser:
         </body>
     </html>
 
+###Remove
+[top](#top)
+
+Now we'll say that in `home.html` we don't want to include the "Legal" footer
+link. We add a node (the type doesn't matter, we'll use a `div` here) to the
+`html` element, and give it the attribute `remove="//div[@id='footer']"`.
+
+    <html base="abstract/base.html">
+        <div id="content" replace="//*[@id='content']">
+            This is the real content.
+        </div>
+        <link append="//head" rel="stylesheet" href="css/home.css"/>
+        <strong prepend="//*[@id='header']">Welcome to </strong>
+        <li before="//*[@id='footer-links']/li[2]"><a href="#">About</a></li>
+        <p after="//*[@id='header']/h1"><a href="#">Logout</a></p>
+        <div surround="//*[@id='footer']" id="footer-wrap"></div>
+        <body merge="//body" class="home"></body>
+        <div remove="//*[@id='footer-links']/li[1]"></div>
+    </html>
+
+In the browser `home.html` looks like this:
+
+    <!doctype html>
+    <html>
+        <head>
+            <script src="js/my-scripts.js"></script>
+            <link rel="stylesheet" href="css/my-styles.css"></script>
+            <link rel="stylesheet" href="css/home.css"></script>
+        </head>
+        <body class="home">
+            <div id="header">
+                <strong>Welcome to </strong><h1>My Neat Site</h1>
+                <p><a href="#">Logout</a></p>
+            </div>
+            <div id="content">
+                This is the real content.
+            </div>
+            <div id="footer-wrap">
+                <div id="footer">
+                    <span id="copy">Copyright 2012 My Company</span>
+                    <ul id="footer-links">
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </body>
+    </html>
+
 ###Require
 [top](#top)
 
@@ -383,6 +433,7 @@ also use `append`:
         <p after="//*[@id='header']/h1"><a href="#">Logout</a></p>
         <div surround="//*[@id='footer']" id="footer-wrap"></div>
         <body merge="//body" class="home"></body>
+        <div remove="//*[@id='footer-links']/li[1]"></div>
         <div require="fragments/widget.html" append="//body"></div>
     </html>
 
@@ -407,7 +458,6 @@ When loaded in the browser, `home.html` will now look like this:
                 <div id="footer">
                     <span id="copy">Copyright 2012 My Company</span>
                     <ul id="footer-links">
-                        <li><a href="#">Legal</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
