@@ -140,6 +140,8 @@ which nodes in the base document to modify. An action can match multiple
 elements, and a subsequent action can modify something produced by a prior
 action (including "require"d content).
 
+For more examples of the usage of each action, see [usage examples](https://github.com/dgrinton/fragmentify-js/blob/master/docs/examples.md).
+
 ###require:
 
 In any document you can use the require="path/to/file.html" attribute. The
