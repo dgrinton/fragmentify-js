@@ -6,5 +6,5 @@ then under "tools")
 3. Drag fragmentify-ext.crx onto the Chrome Extensions window
 4. Tick "Allow access to files URLs" as per the screenshot below
 
-![the installed extension](installed-ext.png)
+![the installed extension](https://raw.github.com/dgrinton/fragmentify-js/master/docs/installed-ext.png)
 
