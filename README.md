@@ -17,13 +17,14 @@ currently in the Chrome Web Store, so you'll need to download the .crx file and
 drag it onto Chrome's Extensions screen. To work off your local file system
 you'll need to tick "Allow access to file URLs" for the Fragmentify extension.
 
+Detailed Chrome Extension installation instructions [here](https://github.com/dgrinton/fragmentify-js/blob/master/docs/install-ext.md).
+
 The other way to use Fragmentify is by including fragmentify.min.js in each leaf
 document of your project - ie if home.html requires widget.html and extends
 base.html, you'd only need to include the JavaScript in home.html (which is the
-file you'd be loading in the browser). This is the only way to way to view
-Fragmentify pages in browsers other than Chrome, though we should soon have
-another extension that will let you save a compiled page as a single file so you
-can then load it in any browser.
+file you'd be loading in the browser). 
+
+Detailed JavaScript installation instructions [here](https://github.com/dgrinton/fragmentify-js/blob/master/docs/install-js.md).
 
 Syntax in a nutshell:
 --------------
