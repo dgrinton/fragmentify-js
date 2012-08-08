@@ -1,5 +1,10 @@
 {
   "name": "Fragmentify",
+  "icons": {
+    "16":"icon_16.png",
+    "48":"icon_48.png",
+    "128":"icon_128.png"
+  },
   "version": "1.0",
   "description": "https://github.com/dgrinton/fragmentify-js",
   "update_url": "http://york.workingsoftware.com.au/~thegrinch/fragmentify-ext/updates.xml",
