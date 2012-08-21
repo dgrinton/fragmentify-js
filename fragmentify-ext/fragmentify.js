@@ -3,6 +3,7 @@ if(!window.Fragmentify) {
 window.Fragmentify = function(){
     var $ = jQuery;
     var ran = false;
+    var script_placeholder = 'script-placeholder-'+new Date().getTime();
     var _pub = {
         'init':function(path){
             if(!path || typeof(path) == 'function') {
@@ -37,6 +38,7 @@ window.Fragmentify = function(){
                     doctype = dt;
                     return '';
                 });
+                data = data.replace(/script/g,script_placeholder);
                 var doc = $.parseXML(data);
                 doc.fragmentify_doctype = doctype;
             }
@@ -116,7 +118,10 @@ window.Fragmentify = function(){
         if(xml_doc.fragmentify_doctype) {
             document.write(xml_doc.fragmentify_doctype);
         }
-        document.write(xml_to_string(xml_doc.documentElement));
+        var data = xml_to_string(xml_doc.documentElement);
+        var re = new RegExp(script_placeholder,'g');
+        data = data.replace(re,'script');
+        document.write(data);
         document.close();
     };
     var xml_to_string = function(node) {
