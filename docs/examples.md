@@ -42,7 +42,17 @@ We'll put these into a base template, `abstract/base.html`:
     </html>
 
 Note that we've used paths `js` and `css`. These must be relative to the file
-that extends `abstract/base.html`, not `abstract/base.html` itself.
+that extends `abstract/base.html`, not `abstract/base.html` itself. If you need
+to extend a file from multiple locations the `<base>` node can be used, for
+example:
+
+    css/my-styles.css
+    abstract/base.html (references css/my-styles.css)
+    home.html (extends abstract/base.html)
+    sub/about.html (also extends abstract/base.html)
+
+You can add `<base href="../"/>` to `sub/about.html` to make the reference to
+`css/my-styles.css` resolve correctly.
 
 Also note that we've put in the placeholder `#content` element - this is to give
 us an easy target later.
