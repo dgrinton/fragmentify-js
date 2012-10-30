@@ -77,7 +77,7 @@ window.Fragmentify = function(){
         });
     };
     var escape_scripts = function(data) {
-        var parts = data.split(/(<\/?script[^>]*>)/);
+        var parts = data.split(/(<\\?\/?script[^>]*>)/);
         var depth = 0;
         var out = '';
         $.each(parts,function(n,p){
@@ -88,7 +88,7 @@ window.Fragmentify = function(){
                 }
                 depth += 1;
             }
-            else if(p.match(/^<\/script>/)) {
+            else if(p.match(/^<\\?\/script>/)) {
                 depth -= 1;
                 if(depth == 0) {
                     out += ']]>';
