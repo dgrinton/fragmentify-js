@@ -4,6 +4,8 @@ window.Fragmentify = function(){
     var $ = jQuery;
     var ran = false;
     var script_placeholder = 'script-placeholder-'+new Date().getTime();
+    var cdata_open_placeholder = 'cdata-open-placeholder-'+new Date().getTime();
+    var cdata_close_placeholder = 'cdata-close-placeholder-'+new Date().getTime();
     var _pub = {
         'init':function(path){
             if(!path || typeof(path) == 'function') {
@@ -27,6 +29,17 @@ window.Fragmentify = function(){
                 $('html').removeAttr('base');
                 $('script[src$="fragmentify.min.js"]').remove();
             },0);
+            if(window.console) {
+                if(console.clear) {
+                    console.clear();
+                    console.log('Fragmentify: document assembled');
+                }
+                else {
+                    console.log('\n\n');
+                    console.log(new Array(80).join('='));
+                    console.log('Fragmentify: document assembled, ignore JS errors above here');
+                }
+            }
         },
     };
     var get_file = function(path, doc_cb) {
@@ -38,6 +51,11 @@ window.Fragmentify = function(){
                     doctype = dt;
                     return '';
                 });
+                //replace existing cdata sections
+                data = data.replace(/<!\[CDATA\[/g,cdata_open_placeholder);
+                data = data.replace(/\]\]>/g,cdata_close_placeholder);
+                //add our own cdata sections
+                data = escape_scripts(data);
                 data = data.replace(/script/g,script_placeholder);
                 var doc = $.parseXML(data);
                 doc.fragmentify_doctype = doctype;
@@ -57,6 +75,31 @@ window.Fragmentify = function(){
             'async':false,
             'dataType':'text',
         });
+    };
+    var escape_scripts = function(data) {
+        var parts = data.split(/(<\/?script[^>]*>)/);
+        var depth = 0;
+        var out = '';
+        $.each(parts,function(n,p){
+            if(p.match(/^<script/)) {
+                out += p;
+                if(depth == 0) {
+                    out += '<![CDATA[';
+                }
+                depth += 1;
+            }
+            else if(p.match(/^<\/script>/)) {
+                depth -= 1;
+                if(depth == 0) {
+                    out += ']]>';
+                }
+                out += p;
+            }
+            else {
+                out += p;
+            }
+        });
+        return out;
     };
     var process = function(path) {
         var ret = null;
@@ -119,8 +162,14 @@ window.Fragmentify = function(){
             document.write(xml_doc.fragmentify_doctype);
         }
         var data = xml_to_string(xml_doc.documentElement);
+        data = data.replace(/<!\[CDATA\[/g,'');
+        data = data.replace(/\]\]>/g,'');
         var re = new RegExp(script_placeholder,'g');
         data = data.replace(re,'script');
+        var re = new RegExp(cdata_open_placeholder,'g');
+        data = data.replace(re,'<![CDATA[');
+        var re = new RegExp(cdata_close_placeholder,'g');
+        data = data.replace(re,']]>');
         document.write(data);
         document.close();
     };
