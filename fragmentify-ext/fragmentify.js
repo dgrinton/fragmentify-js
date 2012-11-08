@@ -149,8 +149,8 @@ window.Fragmentify = function(){
             }
             else {
                 var xml = xml_to_string(src);
-                var instance = $(xml);
-                req.before(instance);
+                var instance = $.parseXML(xml);
+                req.before(instance.documentElement);
             }
         }
         var owner = req.get(0).ownerDocument;
@@ -201,8 +201,8 @@ window.Fragmentify = function(){
                     while(dst.firstChild) {
                         instance.get(0).appendChild(dst.firstChild);
                     }
-                    process_requires(instance, parent_path);
                 }
+                process_requires(instance, parent_path);
                 $(dst).remove();
             }],
             ['append',function(dst, instance){
