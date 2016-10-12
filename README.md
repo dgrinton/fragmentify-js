@@ -61,7 +61,7 @@ In abstract/base.html:
 In home.html:
 
     <html base="abstract/base.html">
-        <div id="content" replace="//[@id='content']">
+        <div id="content" replace="//*[@id='content']">
             This div will replace the #content div in base.html.
             <div require="fragments/widget.html"></div>
         </div>
@@ -70,7 +70,7 @@ In home.html:
 In blog.html:
 
     <html base="abstract/base.html">
-        <div id="content" replace="//[@id='content']">
+        <div id="content" replace="//*[@id='content']">
             This is a blog entry!
             <div class="extra-markup">
                 <div require="fragments/widget.html"></div>
