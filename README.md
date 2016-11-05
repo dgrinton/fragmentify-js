@@ -128,6 +128,19 @@ And blog.html:
         </body>
     </html>
 
+Base path:
+------------
+
+In the examples above, the "included" files are all children of the working directory in which the "master" file is located.
+
+However you can include files from sibling directories, for example:
+
+    <htm base="../common/base.html">
+
+However, this means that a "base" element will be written to the head of the document which sets the base of all hrefs, stylesheets etc. to ".." relative to the current document.
+
+So basically the "root directory" of the application from which all links and assets are based is determined based on the relationship of the "base document" to the document from which it is included.
+
 The details:
 ------------
 
