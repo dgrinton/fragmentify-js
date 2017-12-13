@@ -136,7 +136,7 @@ window.Fragmentify = function(){
             process_action(base_doc,v,parent_path);
         });
         $(doc).find('html').removeAttr('base');
-        $(base_doc).find('head').prepend('<base href="'+super_base_path+'" />');
+//        $(base_doc).find('head').prepend('<base href="'+super_base_path+'" />');
         return base_doc;
     };
 
