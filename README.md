@@ -61,7 +61,7 @@ In abstract/base.html:
 In home.html:
 
     <html base="abstract/base.html">
-        <div id="content" replace="//[@id='content']">
+        <div id="content" replace="//*[@id='content']">
             This div will replace the #content div in base.html.
             <div require="fragments/widget.html"></div>
         </div>
@@ -70,7 +70,7 @@ In home.html:
 In blog.html:
 
     <html base="abstract/base.html">
-        <div id="content" replace="//[@id='content']">
+        <div id="content" replace="//*[@id='content']">
             This is a blog entry!
             <div class="extra-markup">
                 <div require="fragments/widget.html"></div>
@@ -127,6 +127,19 @@ And blog.html:
             </div>
         </body>
     </html>
+
+Base path:
+------------
+
+In the examples above, the "included" files are all children of the working directory in which the "master" file is located.
+
+However you can include files from sibling directories, for example:
+
+    <htm base="../common/base.html">
+
+However, this means that a "base" element will be written to the head of the document which sets the base of all hrefs, stylesheets etc. to ".." relative to the current document.
+
+So basically the "root directory" of the application from which all links and assets are based is determined based on the relationship of the "base document" to the document from which it is included.
 
 The details:
 ------------

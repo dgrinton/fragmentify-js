@@ -1,5 +1,16 @@
 jQuery.noConflict();
 if(!window.Fragmentify) {
+
+Array.prototype.clean = function(deleteValue) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == deleteValue) {         
+      this.splice(i, 1);
+      i--;
+    }
+  }
+  return this;
+};
+
 window.Fragmentify = function(){
     var $ = jQuery;
     var ran = false;
@@ -22,6 +33,7 @@ window.Fragmentify = function(){
                 alert('how do i shot xpath?');
                 return;
             }
+
             var doc = process(path);
             replace_document(doc);
             setTimeout(function(){
@@ -115,6 +127,7 @@ window.Fragmentify = function(){
     var process_base = function(doc, parent_path){
         var actions = $(doc).find('html > *');
         var base_fn = parent_path+$(doc).find('html').attr('base');
+        var super_base_path = get_super_base_path(parent_path,base_fn);
         var base_doc = process(base_fn);
         actions.each(function(k,v){
             if(v.nodeName == 'head') {
@@ -123,8 +136,25 @@ window.Fragmentify = function(){
             process_action(base_doc,v,parent_path);
         });
         $(doc).find('html').removeAttr('base');
+//        $(base_doc).find('head').prepend('<base href="'+super_base_path+'" />');
         return base_doc;
     };
+
+    var get_super_base_path = function(document,base_fn)
+    {
+        base_fn = base_fn.replace(document,"");
+        var split_document = document.trim().split("/").clean("");
+        var split_base_fn  = base_fn.trim().split("/").clean("");
+        
+        for(var i = 0;i < split_base_fn.length;i++)
+        {
+            if(split_base_fn[i] == "..")
+                split_document.pop();
+        }
+        
+        return "/"+split_document.join("/")+"/";
+    };
+
     var process_requires = function(root, path) {
         $(root).find('*').andSelf().filter('[require]').each(function(k,v){
             process_require(v, path);
